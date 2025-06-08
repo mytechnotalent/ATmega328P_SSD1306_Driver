@@ -23,7 +23,7 @@ An ATmega328P SSD1306 driver written entirely in Assembler.
 ; Toolchain: AVR-AS, AVRDUDE
 ; License: Apache License 2.0
 ; Description: This program is a simple SSD1306 driver that works
-;              capital letters.
+;              with capital letters.
 ; ===================================================================
 
 ; ===================================================================
@@ -138,7 +138,7 @@ TWI_Init:
   RET                             ; return from subroutine
 
 ; ===================================================================
-; SUBROUTINE: TWI_write_byte
+; SUBROUTINE: TWI_Write_Byte
 ; ===================================================================
 ; Description: Sends a start condition, writes the TWI address, 
 ;              control byte, and data byte, then issues a stop 
@@ -407,7 +407,7 @@ Set_Cursor_Page:
   ; -----------------------------------------------------------------
   ; STEP 1: Set Column Address to Start at 0
   ; -----------------------------------------------------------------
-  PUSH   R16                     ; save r16 to the stack
+  PUSH   R16                     ; save R16 to the stack
   LDI    R22, 0x00               ; Control Byte: Command Mode
   LDI    R3, 0x21                ; cmd: Set Column Address
   RCALL  TWI_Write_Byte          ; send command
@@ -517,19 +517,19 @@ Display_Char:
 ; ===================================================================
 Display_Text_KEVIN_T:
   ; Display "KEVIN T"
-  LDI    R16, 'K'                 ; load ASCII value of 'K' into r16
+  LDI    R16, 'K'                 ; load ASCII value of 'K' into R16
   RCALL  Display_Char             ; display 'K'
-  LDI    R16, 'E'                 ; load ASCII value of 'E' into r16
+  LDI    R16, 'E'                 ; load ASCII value of 'E' into R16
   RCALL  Display_Char             ; display 'E'
-  LDI    R16, 'V'                 ; load ASCII value of 'V' into r16
+  LDI    R16, 'V'                 ; load ASCII value of 'V' into R16
   RCALL  Display_Char             ; display 'V'
-  LDI    R16, 'I'                 ; load ASCII value of 'I' into r16
+  LDI    R16, 'I'                 ; load ASCII value of 'I' into R16
   RCALL  Display_Char             ; display 'I'
-  LDI    R16, 'N'                 ; load ASCII value of 'N' into r16
+  LDI    R16, 'N'                 ; load ASCII value of 'N' into R16
   RCALL  Display_Char             ; display 'N'
-  LDI    R16, ' '                 ; load ASCII value of space r16
+  LDI    R16, ' '                 ; load ASCII value of space R16
   RCALL  Display_Char             ; display space
-  LDI    R16, 'T'                 ; load ASCII value of 'T' into r16
+  LDI    R16, 'T'                 ; load ASCII value of 'T' into R16
   RCALL  Display_Char             ; display 'T'
   RET                             ; return from subroutine
 
