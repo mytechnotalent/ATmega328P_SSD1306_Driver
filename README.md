@@ -103,7 +103,7 @@ TWI_Init:
   ; -----------------------------------------------------------------
   ; STEP 1: Set TWI Prescaler to 1
   ; -----------------------------------------------------------------
-  LDI    R16, 0x00                ; load immediate val 0x00 into r16
+  LDI    R16, 0x00                ; load immediate val 0x00 into R16
                                   ; 0x00 sets TWI Prescaler bits 
                                   ; (TWPS1:0) to 0
                                   ; prescaler value: 1 (as 4^TWPS)
@@ -114,7 +114,7 @@ TWI_Init:
   ; -----------------------------------------------------------------
   ; STEP 2: Set TWI Bit Rate Register for ~100kHz
   ; -----------------------------------------------------------------
-  LDI    R16, 72                  ; load immediate value 72 into r16
+  LDI    R16, 72                  ; load immediate value 72 into R16
                                   ; this value sets the SCL freq
                                   ; SCL = F_CPU / 
                                   ; (16 + 2 * TWBR * 4^TWPS)
@@ -144,8 +144,8 @@ TWI_Init:
 ;              control byte, and data byte, then issues a stop 
 ;              condition.
 ; -------------------------------------------------------------------
-; Inputs: r22 - Control Byte (0x00: Command, 0x40: Data)
-;         r23 - Data Byte
+; Inputs: R22 - Control Byte (0x00: Command, 0x40: Data)
+;         R23 - Data Byte
 ; -------------------------------------------------------------------
 ; Instructions: AVR Instruction Set Manual
 ;               6.87 RCALL – Relative Call to Subroutine
@@ -170,7 +170,7 @@ TWI_Write_Byte:
   RCALL  .TWI_Stop                ; send stop condition
   RET                             ; return from subroutine
 .TWI_Start:
-  CLR    R16                      ; clear r16 (initialize to 0)
+  CLR    R16                      ; clear R16 (initialize to 0)
   ORI    R16, (1<<TWINT)          ; set TWINT bit to clear int flag
   ORI    R16, (1<<TWSTA)          ; set TWSTA bit for start cond
   ORI    R16, (1<<TWEN)           ; set TWEN bit to enable TWI
@@ -182,7 +182,7 @@ TWI_Write_Byte:
   RET                             ; return from subroutine
 .TWI_Write:
   STS    TWDR, r24                ; Load data into TWDR
-  CLR    R16                      ; clear r16 (initialize to 0)
+  CLR    R16                      ; clear R16 (initialize to 0)
   ORI    R16, (1<<TWINT)          ; set TWINT bit clear int flag
   ORI    R16, (1<<TWEN)           ; set TWEN bit to enable TWI trans
   STS    TWCR, R16                ; write to TWCR to start trans
@@ -192,7 +192,7 @@ TWI_Write_Byte:
   RJMP   .TWI_Write_Wait          ; wait until write is complete
   RET                             ; return from subroutine
 .TWI_Stop:
-  CLR    R16                      ; clear r16 (initialize to 0)
+  CLR    R16                      ; clear R16 (initialize to 0)
   ORI    R16, (1<<TWINT)          ; set TWINT bit to clear int flag
   ORI    R16, (1<<TWSTO)          ; set TWSTO bit for stop condition
   ORI    R16, (1<<TWEN)           ; set TWEN bit to enable TWI
@@ -283,61 +283,61 @@ SSD1306_Init:
   ; -----------------------------------------------------------------
   ; STEP 10: Set COM Pins Hardware Configuration
   ; -----------------------------------------------------------------
-  LDI    r22, 0x00                ; load Control Byte (Command Mode)
-  LDI    r23, 0xDA                ; cmd: Set COM Pins Hardware Config
-  rcall  TWI_write_byte           ; send command to SSD1306
-  LDI    r22, 0x00                ; load Control Byte (Command Mode)
-  LDI    r23, 0x12                ; value: alt COM pin config
-  rcall  TWI_write_byte           ; send value to SSD1306
+  LDI    R22, 0x00                ; load Control Byte (Command Mode)
+  LDI    R23, 0xDA                ; cmd: Set COM Pins Hardware Config
+  RCALL  TWI_Write_Byte           ; send command to SSD1306
+  LDI    R22, 0x00                ; load Control Byte (Command Mode)
+  LDI    R23, 0x12                ; value: alt COM pin config
+  RCALL  TWI_Write_Byte           ; send value to SSD1306
   ; -----------------------------------------------------------------
   ; STEP 11: Set Contrast Control
   ; -----------------------------------------------------------------
-  LDI    r22, 0x00                ; load Control Byte (Command Mode)
-  LDI    r23, 0x81                ; cmd: Set Contrast Control
-  rcall  TWI_write_byte           ; send command to SSD1306
-  LDI    r22, 0x00                ; load Control Byte (Command Mode)
-  LDI    r23, 0xCF                ; value: Set contrast
-  rcall  TWI_write_byte           ; send value to SSD1306
+  LDI    R22, 0x00                ; load Control Byte (Command Mode)
+  LDI    R23, 0x81                ; cmd: Set Contrast Control
+  RCALL  TWI_Write_Byte           ; send command to SSD1306
+  LDI    R22, 0x00                ; load Control Byte (Command Mode)
+  LDI    R23, 0xCF                ; value: Set contrast
+  RCALL  TWI_Write_Byte           ; send value to SSD1306
   ; -----------------------------------------------------------------
-  ; STEP 12: Set Pre-charge Period
+  ; STEP 12: Set Pre-Charge Period
   ; -----------------------------------------------------------------
-  LDI    r22, 0x00                ; load Control Byte (Command Mode)
-  LDI    r23, 0xD9                ; cmd: Set Pre-charge Period
-  rcall  TWI_write_byte           ; send command to SSD1306
-  LDI    r22, 0x00                ; load Control Byte (Command Mode)
-  LDI    r23, 0xF1                ; value: P1 = 15 DCLKs, P2 = 1 DCLK
-  rcall  TWI_write_byte           ; send value to SSD1306
+  LDI    R22, 0x00                ; load Control Byte (Command Mode)
+  LDI    R23, 0xD9                ; cmd: Set Pre-charge Period
+  RCALL  TWI_Write_Byte           ; send command to SSD1306
+  LDI    R22, 0x00                ; load Control Byte (Command Mode)
+  LDI    R23, 0xF1                ; value: P1 = 15 DCLKs, P2 = 1 DCLK
+  RCALL  TWI_Write_Byte           ; send value to SSD1306
   ; -----------------------------------------------------------------
   ; STEP 13: Set VCOMH Deselect Level
   ; -----------------------------------------------------------------
-  LDI    r22, 0x00                ; load Control Byte (Command Mode)
-  LDI    r23, 0xDB                ; cmd: Set VCOMH Deselect Level
-  rcall  TWI_write_byte           ; send command to SSD1306
-  LDI    r22, 0x00                ; load Control Byte (Command Mode)
-  LDI    r23, 0x40                ; Value: 0.77 x Vcc
-  rcall  TWI_write_byte           ; send value to SSD1306
+  LDI    R22, 0x00                ; load Control Byte (Command Mode)
+  LDI    R23, 0xDB                ; cmd: Set VCOMH Deselect Level
+  RCALL  TWI_Write_Byte           ; send command to SSD1306
+  LDI    R22, 0x00                ; load Control Byte (Command Mode)
+  LDI    R23, 0x40                ; Value: 0.77 x Vcc
+  RCALL  TWI_Write_Byte           ; send value to SSD1306
   ; -----------------------------------------------------------------
-  ; STEP 14: Set Entire Display ON/Resume
+  ; STEP 14: Set Entire Display On/Resume
   ; -----------------------------------------------------------------
-  LDI    r22, 0x00                ; load Control Byte (Command Mode)
-  LDI    r23, 0xA4                ; cmd: Resume to RAM Content Disp
-  rcall  TWI_write_byte           ; send command to SSD1306
+  LDI    R22, 0x00                ; load Control Byte (Command Mode)
+  LDI    R23, 0xA4                ; cmd: Resume to RAM Content Disp
+  RCALL  TWI_Write_Byte           ; send command to SSD1306
   ; -----------------------------------------------------------------
   ; STEP 15: Set Normal Display
   ; -----------------------------------------------------------------
-  LDI    r22, 0x00                ; load Control Byte (Command Mode)
-  LDI    r23, 0xA6                ; cmd: Normal Display
-  rcall  TWI_write_byte           ; send command to SSD1306
+  LDI    R22, 0x00                ; load Control Byte (Command Mode)
+  LDI    R23, 0xA6                ; cmd: Normal Display
+  RCALL  TWI_Write_Byte           ; send command to SSD1306
   ; -----------------------------------------------------------------
-  ; STEP 16: Turn Display ON
+  ; STEP 16: Turn Display On
   ; -----------------------------------------------------------------
-  LDI    r22, 0x00                ; load Control Byte (Command Mode)
-  LDI    r23, 0xAF                ; cmd: Display ON
-  rcall  TWI_write_byte           ; send command to SSD1306
-  ret                             ; return from subroutine
+  LDI    R22, 0x00                ; load Control Byte (Command Mode)
+  LDI    R23, 0xAF                ; cmd: Display ON
+  RCALL  TWI_Write_Byte           ; send command to SSD1306
+  RET                             ; return from subroutine
 
 ; ===================================================================
-; SUBROUTINE: SSD1306_clear
+; SUBROUTINE: SSD1306_Clear
 ; ===================================================================
 ; Description: Clears the OLED screen and resets the cursor to the 
 ;              top-left.
@@ -351,49 +351,49 @@ SSD1306_Init:
 ;               6.85 POP – Pop Register from Stack
 ;               6.88 RET – Return from Subroutine
 ; ===================================================================
-SSD1306_clear:
+SSD1306_Clear:
   ; -----------------------------------------------------------------
   ; STEP 1: Clear OLED Screen
   ; -----------------------------------------------------------------
-  LDI    r22, 0x40                ; Control Byte: Data Mode
-  LDI    r23, 0x00                ; Data Byte: 0x00 (Clear)
-  LDI    r24, 8                   ; 8 pages (for 128x64 display)
-.clear_loop:
-  push   r24                      ; save page counter
-  LDI    r25, 128                 ; 128 columns per page
-.clear_page:
-  rcall  TWI_write_byte           ; write 0x00 to clear pixel
-  dec    r25                      ; decrement column counter
-  brne   .clear_page              ; repeat until all cols cleared
-  pop    r24                      ; restore page counter
-  dec    r24                      ; decrement page counter
-  brne   .clear_loop              ; repeat for all 8 pages
+  LDI    R22, 0x40                ; Control Byte: Data Mode
+  LDI    R23, 0x00                ; Data Byte: 0x00 (Clear)
+  LDI    R24, 8                   ; 8 pages (for 128x64 display)
+.Clear_Loop:
+  PUSH   R24                      ; save page counter
+  LDI    R25, 128                 ; 128 columns per page
+.Clear_Page:
+  RCALL  TWI_Write_Byte           ; write 0x00 to clear pixel
+  DEC    R25                      ; decrement column counter
+  BRNE   .Clear_Page              ; repeat until all cols cleared
+  POP    R24                      ; restore page counter
+  DEC    R24                      ; decrement page counter
+  BRNE   .Clear_Loop              ; repeat for all 8 pages
   ; -----------------------------------------------------------------
   ; STEP 2: Reset Cursor to Top-Left (0,0)
   ; -----------------------------------------------------------------
-  LDI    r22, 0x00                ; Control Byte: Command Mode
-  LDI    r23, 0x21                ; cmd: Set Column Address
-  rcall  TWI_write_byte           ; send command to SSD1306
-  LDI    r23, 0x00                ; Column Start Address (0)
-  rcall  TWI_write_byte           ; send start address
-  LDI    r23, 0x7F                ; Column End Address (127)
-  rcall  TWI_write_byte           ; send end address
-  LDI    r22, 0x00                ; Control Byte: Command Mode
-  LDI    r23, 0x22                ; cmd: Set Page Address
-  rcall  TWI_write_byte           ; send command to SSD1306
-  LDI    r23, 0x00                ; Page Start Address (0)
-  rcall  TWI_write_byte           ; send start address
-  LDI    r23, 0x07                ; Page End Address (7)
-  rcall  TWI_write_byte           ; send end address
-  ret                             ; return from subroutine
+  LDI    R22, 0x00                ; Control Byte: Command Mode
+  LDI    R23, 0x21                ; cmd: Set Column Address
+  RCALL  TWI_Write_Byte           ; send command to SSD1306
+  LDI    R23, 0x00                ; Column Start Address (0)
+  RCALL  TWI_Write_Byte           ; send start address
+  LDI    R23, 0x7F                ; Column End Address (127)
+  RCALL  TWI_Write_Byte           ; send end address
+  LDI    R22, 0x00                ; Control Byte: Command Mode
+  LDI    R23, 0x22                ; cmd: Set Page Address
+  RCALL  TWI_Write_Byte           ; send command to SSD1306
+  LDI    R23, 0x00                ; Page Start Address (0)
+  RCALL  TWI_Write_Byte           ; send start address
+  LDI    R23, 0x07                ; Page End Address (7)
+  RCALL  TWI_Write_Byte           ; send end address
+  RET                             ; return from subroutine
 
 ; ===================================================================
-; SUBROUTINE: set_cursor_page
+; SUBROUTINE: Set_Cursor_Page
 ; ===================================================================
 ; Description: Sets the cursor to a specific page (row) on the OLED
 ;              display.
 ; -------------------------------------------------------------------
-; Inputs: r16 - Page Number (0 to 7 for 128x64 display)
+; Inputs: R16 - Page Number (0 to 7 for 128x64 display)
 ; -------------------------------------------------------------------
 ; Instructions: AVR Instruction Set Manual
 ;               6.86 PUSH – Push Register on Stack
@@ -403,41 +403,41 @@ SSD1306_clear:
 ;               6.75 MOV – Copy Register
 ;               6.88 RET – Return from Subroutine
 ; ===================================================================
-set_cursor_page:
+Set_Cursor_Page:
   ; -----------------------------------------------------------------
   ; STEP 1: Set Column Address to Start at 0
   ; -----------------------------------------------------------------
-  push   r16                     ; save r16 to the stack
-  LDI    r22, 0x00               ; Control Byte: Command Mode
-  LDI    r23, 0x21               ; cmd: Set Column Address
-  rcall  TWI_write_byte          ; send command
-  LDI    r23, 0x00               ; Column Start Address: 0
-  rcall  TWI_write_byte          ; send start address
-  LDI    r23, 0x7F               ; Column End Address: 127
-  rcall  TWI_write_byte          ; send end address
+  PUSH   R16                     ; save r16 to the stack
+  LDI    R22, 0x00               ; Control Byte: Command Mode
+  LDI    R3, 0x21                ; cmd: Set Column Address
+  RCALL  TWI_Write_Byte          ; send command
+  LDI    R23, 0x00               ; Column Start Address: 0
+  RCALL  TWI_Write_Byte          ; send start address
+  LDI    R23, 0x7F               ; Column End Address: 127
+  RCALL  TWI_Write_Byte          ; send end address
   ; -----------------------------------------------------------------
   ; STEP 2: Set Page Address
   ; -----------------------------------------------------------------
-  LDI    r22, 0x00               ; Control Byte: Command Mode
-  LDI    r23, 0x22               ; cmd: Set Page Address
-  rcall  TWI_write_byte          ; send command
-  pop    r16                     ; restore r16 from the stack
-  mov    r23, r16                ; copy page number from r16 to r23
-  rcall  TWI_write_byte          ; send page start address
+  LDI    R22, 0x00               ; Control Byte: Command Mode
+  LDI    R23, 0x22               ; cmd: Set Page Address
+  RCALL  TWI_Write_Byte          ; send command
+  POP    R16                     ; restore R16 from the stack
+  MOV    R23, R16                ; copy page number from R16 to R23
+  RCALL  TWI_Write_Byte          ; send page start address
   ; -----------------------------------------------------------------
   ; STEP 3: Reset Cursor to Leftmost Column (Column Address 0)
   ; -----------------------------------------------------------------
-  LDI    r22, 0x00               ; Control Byte: Command Mode
-  LDI    r23, 0x00               ; cmd: Set Column Address Start
-  rcall  TWI_write_byte          ; send column start address
-  ret                            ; return from subroutine
+  LDI    R22, 0x00               ; Control Byte: Command Mode
+  LDI    R23, 0x00               ; cmd: Set Column Address Start
+  RCALL  TWI_Write_Byte          ; send column start address
+  RET                            ; return from subroutine
 
 ; ===================================================================
-; SUBROUTINE: display_char
+; SUBROUTINE: Display_Char
 ; ===================================================================
 ; Description: Displays a single character on the OLED screen.
 ; -------------------------------------------------------------------
-; Inputs: r16 - ASCII code of the letter to display
+; Inputs: R16 - ASCII code of the letter to display
 ; -------------------------------------------------------------------
 ; Instructions: AVR Instruction Set Manual
 ;               6.95 LDI – Load Immediate
@@ -454,23 +454,23 @@ set_cursor_page:
 ;               6.72 LPM – Load Program Memory
 ;               6.88 RET – Return from Subroutine
 ; ===================================================================
-display_char:
+Display_Char:
   ; -----------------------------------------------------------------
   ; STEP 1: Check Character Validity
   ; -----------------------------------------------------------------
   LDI    R22, 0x40                ; Control Byte: Data Mode
   CPI    R16, 0x20                ; check if char is SPACE (0x20)
-  BREQ   .Is_Space                ; branch if equal to .is_space 
+  BREQ   .Is_Space                ; branch if equal to .Is_Space 
   CPI    R16, 'A'                 ; check if char is 'A' or higher
   BRLO   .Invalid_Char            ; if less than 'A', invalid
   CPI    R16, 'Z'                 ; check if char is 'Z' or lower
   BRCC   .Invalid_Char            ; if greater than 'Z', invalid
-  SUBI   R16, 'A'                 ; .calculate index: r16 - 'A'
+  SUBI   R16, 'A'                 ; .calculate index: R16 - 'A'
   RJMP   .Calculate_Index         ; jump to .Calculate_Index
-.is_space:
+.Is_Space:
   LDI    R16, 26                  ; index for space in Font_Table
   RJMP   .Calculate_Index         ; jump to .Calculate_Index
-.invalid_char:
+.Invalid_Char:
   LDI    R16, 26                  ; SPACE as default invalid chars
 .Calculate_Index:
   ; -----------------------------------------------------------------
