@@ -598,6 +598,5 @@ Font_Table:
 
 <br>
 
-## License
+# License
 [Apache License 2.0](https://github.com/mytechnotalent/ATmega328P_SSD1306_Driver/blob/main/LICENSE)
-
